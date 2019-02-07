@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sslservice1-service
+spec:
+  type: NodePort
+  ports:
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: https
+  selector:
+    pod-app: sslservice1
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: sslservice1-deployment
+  labels:
+    app: sslservice1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod-app: sslservice1
+  template:
+    metadata:
+      labels:
+        pod-app: sslservice1
+    spec:
+      containers:
+      - name: sslservice1-container
+        image: cr2019.azurecr.io/sslservice1:latest
